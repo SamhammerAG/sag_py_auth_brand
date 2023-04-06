@@ -8,7 +8,7 @@ with open("requirements.txt", "r") as fin:
 
 setuptools.setup(
     name="sag-py-auth-brand",
-    version="0.1.0",
+    version="0.2.0",
     description="Keycloak brand/instance authentication for python projects",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",

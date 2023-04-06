@@ -24,7 +24,7 @@ This library bases on sag_py_auth and adds support for instances/brands.
 
 ### Installation
 
-pip install sag_py_auth_brand
+pip install sag-py-auth-brand
 
 ### Secure your apis
 
