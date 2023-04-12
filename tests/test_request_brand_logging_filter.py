@@ -53,3 +53,19 @@ def test__get_field_value__without_data() -> None:
     # Assert
     assert log_entry.msg == "A test message"
     assert not hasattr(log_entry, "request_brand")
+
+
+def test__get_field_value__with_both() -> None:
+    # Arrange
+    logging_filter = RequestBrandLoggingFilter()
+    log_entry = LogRecord("LogRecord", 0, "path.py", 100, "A test message", None, None)
+
+    set_brand_to_context("myBrand")
+    set_brand_alias_to_context("myBrandAlias")
+
+    # Act
+    logging_filter.filter(log_entry)
+
+    # Assert
+    assert log_entry.msg == "A test message"
+    assert cast(BrandLogRecord, log_entry).request_brand == "myBrandAlias"
