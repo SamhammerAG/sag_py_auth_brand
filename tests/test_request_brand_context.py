@@ -46,4 +46,4 @@ def test__get_brand__with_previously_set_both() -> None:
     # Act
     actual: Optional[str] = get_brand_from_context()
 
-    assert actual == "myBrandAlias"
+    assert actual == "myBrand"
