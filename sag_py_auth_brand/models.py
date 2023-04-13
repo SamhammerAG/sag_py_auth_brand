@@ -11,4 +11,4 @@ class BrandAuthConfig(AuthConfig):
 
 
 class BrandLogRecord(LogRecord):
-    request_brand: str
+    brand: str

@@ -11,6 +11,6 @@ class RequestBrandLoggingFilter(Filter):
 
     def filter(self, record: LogRecord) -> bool:
         if request_brand := get_brand_alias() or get_brand():
-            record.request_brand = request_brand
+            record.brand = request_brand
 
         return True
