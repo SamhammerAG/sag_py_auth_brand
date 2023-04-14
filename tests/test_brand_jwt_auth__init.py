@@ -6,6 +6,12 @@ from sag_py_auth_brand.brand_jwt_auth import BrandJwtAuth
 from sag_py_auth_brand.models import BrandAuthConfig
 
 
+def _verify_token_role(jwt: BrandJwtAuth, item_no: int, client: str, role: str) -> None:
+    instance: TokenRole = jwt.required_roles[item_no]
+    assert instance.client == client
+    assert instance.role == role
+
+
 def test__jwt_auth__init__with_endpoint_role() -> None:
     # Arrange
     auth_config = BrandAuthConfig(
@@ -40,9 +46,3 @@ def test__jwt_auth__init__without_endpoint_role() -> None:
 
     assert len(jwt.required_roles) == 1
     _verify_token_role(jwt, 0, "role-instance", "myInstance")
-
-
-def _verify_token_role(jwt: BrandJwtAuth, item_no: int, client: str, role: str) -> None:
-    instance: TokenRole = jwt.required_roles[item_no]
-    assert instance.client == client
-    assert instance.role == role

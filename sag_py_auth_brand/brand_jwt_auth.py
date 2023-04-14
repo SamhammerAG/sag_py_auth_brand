@@ -8,6 +8,7 @@ from sag_py_auth.models import Token, TokenRole
 from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
 
+from .constants import LogMessages
 from .models import BrandAuthConfig
 from .request_brand_context import set_brand as set_brand_to_context
 from .request_brand_context import set_brand_alias as set_brand_alias_to_context
@@ -51,7 +52,7 @@ class BrandJwtAuth(JwtAuth):
 
         # Check if the given brand is defined as alias for the brand it should be replaced by.
         if not brand_aliases:
-            logger.debug("Brand %s is not in list of accessible brand aliases.", brand)
+            logger.debug(LogMessages.MISSING_BRAND_ALIAS, brand)
             return False
 
         # Find indices of all detected brand aliases accessible for the current client or user
@@ -66,10 +67,10 @@ class BrandJwtAuth(JwtAuth):
         # Set alias only if there is exactly one match
         # (one user must have access to 0 or 1 brand that corresponds to a brand alias):
         if len(accessible_brand_alias_ids) > 1:
-            logger.warning("Unambiguous role association: user has access to more than one brand alias.")
+            logger.warning(LogMessages.UNAMBIGUOUS_BRAND_ALIAS)
             return False
         if not accessible_brand_alias_ids:
-            logger.warning("Unambiguous role association: brand is not associated with any brand aliases.")
+            logger.warning(LogMessages.MISSING_COMPOUND_BRAND)
             return False
 
         brand_alias: str = brand_aliases[0]

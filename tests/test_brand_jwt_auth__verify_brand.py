@@ -15,7 +15,7 @@ def test__verify_brand__where_user_has_brand() -> None:
     auth_config = BrandAuthConfig(
         "https://authserver.com/auth/realms/projectName", "myAudience", "myInstance", "myStage"
     )
-    brand_jwt_auth = BrandJwtAuth(auth_config, ["myRequiredRole"])
+    brand_jwt_auth = BrandJwtAuth(auth_config, ["myEndpoint"])
 
     resource_access: Optional[Dict[str, Any]] = {"role-brand": {"roles": ["mybrandone", "mybrandtwo"]}}
 
@@ -34,7 +34,7 @@ def test__verify_brand__where_brand_is_missing() -> None:
         auth_config = BrandAuthConfig(
             "https://authserver.com/auth/realms/projectName", "myAudience", "myInstance", "myStage"
         )
-        brand_jwt_auth = BrandJwtAuth(auth_config, ["myRequiredRole"])
+        brand_jwt_auth = BrandJwtAuth(auth_config, ["myEndpoint"])
 
         resource_access: Optional[Dict[str, Any]] = {"role-brand": {"roles": ["mybrandone", "mybrandtwo"]}}
 

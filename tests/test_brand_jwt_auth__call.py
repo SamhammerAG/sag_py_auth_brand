@@ -2,7 +2,6 @@ from typing import Literal, Tuple
 
 import pytest
 from fastapi import Request
-from pytest import MonkeyPatch
 from sag_py_auth.models import Token
 from starlette.datastructures import Headers
 
@@ -13,33 +12,33 @@ from tests.helpers import get_token
 pytest_plugins: Tuple[Literal["pytest_asyncio"]] = ("pytest_asyncio",)
 
 
-async def jwt_auth_call_mock(self: BrandJwtAuth, request: Request) -> Token:
+async def mock_jwt_auth_call(_, __) -> Token:
     return get_token(None, None)
 
 
-def _verify_brand_mock(self: BrandJwtAuth, token: Token, brand: str) -> None:
+def mock_verify_brand(_, token: Token, __) -> None:
     if token:
         token.token_dict["_verify_brand"] = "True"
 
 
-was_brand_set_to_context = False
+WAS_BRAND_SET_TO_CONTEXT = False
 
 
-def set_brand_to_context_mock(brand_to_set: str) -> None:
-    global was_brand_set_to_context
-    was_brand_set_to_context = True
+def mock_set_brand_to_context(_) -> None:
+    global WAS_BRAND_SET_TO_CONTEXT
+    WAS_BRAND_SET_TO_CONTEXT = True
 
 
 @pytest.mark.asyncio
-async def test__call__correctly_processes_request(monkeypatch: MonkeyPatch) -> None:
+async def test__call__correctly_processes_request(monkeypatch: pytest.MonkeyPatch) -> None:
     # Arrange
     auth_config = BrandAuthConfig(
         "https://authserver.com/auth/realms/projectName", "audienceOne", "myInstance", "myStage"
     )
 
-    monkeypatch.setattr("sag_py_auth.JwtAuth.__call__", jwt_auth_call_mock)
-    monkeypatch.setattr("sag_py_auth_brand.brand_jwt_auth.BrandJwtAuth._verify_brand", _verify_brand_mock)
-    monkeypatch.setattr("sag_py_auth_brand.brand_jwt_auth.set_brand_to_context", set_brand_to_context_mock)
+    monkeypatch.setattr("sag_py_auth.JwtAuth.__call__", mock_jwt_auth_call)
+    monkeypatch.setattr("sag_py_auth_brand.brand_jwt_auth.BrandJwtAuth._verify_brand", mock_verify_brand)
+    monkeypatch.setattr("sag_py_auth_brand.brand_jwt_auth.set_brand_to_context", mock_set_brand_to_context)
 
     jwt = BrandJwtAuth(auth_config, None)
 
@@ -50,7 +49,9 @@ async def test__call__correctly_processes_request(monkeypatch: MonkeyPatch) -> N
     actual: Token = await jwt.__call__(request)
 
     # Assert - Verify that all steps have been executed
+    # Comment: the calls of the mocked function are verified via variables,
+    # alternatively one could use unittest.mock and assertions like assert_called on the functions.
     assert actual.get_field_value("typ") == "Bearer"
     assert actual.get_field_value("azp") == "public-project-swagger"
     assert actual.get_field_value("_verify_brand") == "True"
-    assert was_brand_set_to_context
+    assert WAS_BRAND_SET_TO_CONTEXT
