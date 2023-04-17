@@ -39,26 +39,26 @@ class BrandJwtAuth(JwtAuth):
 
     async def __call__(self, request: Request, brand: str = Header(...)) -> Token:  # type: ignore
         token: Token = await super(BrandJwtAuth, self).__call__(request)
-        self._verify_brand(token, brand)
+        self._verify_brand(token=token, request_brand=brand)
         return token
 
-    def _verify_brand(self, token: Token, brand: str) -> None:
-        token_has_brand: bool = token.has_role("role-brand", brand)
-        accessible_brand_alias: Optional[str] = self._get_accessible_brand_alias(token, brand)
+    def _verify_brand(self, token: Token, request_brand: str) -> None:
+        token_has_brand: bool = token.has_role("role-brand", request_brand)
+        accessible_brand_alias: Optional[str] = self._get_accessible_brand_alias(token, request_brand)
 
         if not token_has_brand and not accessible_brand_alias:
             set_request_brand_to_context(None)
             set_request_brand_alias_to_context(None)
             self._raise_auth_error(HTTP_403_FORBIDDEN, "Missing brand.")
 
-        set_request_brand_to_context(brand)
+        set_request_brand_to_context(request_brand)
         set_request_brand_alias_to_context(accessible_brand_alias)
 
-    def _get_accessible_brand_alias(self, token: Token, brand: str) -> Optional[str]:
+    def _get_accessible_brand_alias(self, token: Token, request_brand: str) -> Optional[str]:
         brand_aliases: List[str] = token.get_roles("role-brand-alias")
 
         # Check if the given brand is defined as alias for the brand it should be replaced by.
-        if not brand_aliases:
+        if not brand_aliases or request_brand not in brand_aliases:
             logger.debug(LogMessages.MISSING_BRAND_ALIAS)
             return None
 
