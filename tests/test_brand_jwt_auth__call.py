@@ -15,10 +15,10 @@ async def mock_jwt_auth_call(_: BrandJwtAuth, __: Request) -> Token:
     return get_token(None, None)
 
 
-def mock_verify_brand(_: BrandJwtAuth, token: Token, brand: str) -> None:
+def mock_verify_brand(_: BrandJwtAuth, token: Token, request_brand: str) -> None:
     if token:
         token.token_dict["_verify_brand"] = "True"
-        token.token_dict["_brand"] = brand
+        token.token_dict["_brand"] = request_brand
 
 
 @pytest.mark.asyncio
