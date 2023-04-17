@@ -1,6 +1,6 @@
 from logging import Filter, LogRecord
 
-from .request_brand_context import get_brand, get_brand_alias
+from .request_brand_context import get_request_brand, get_request_brand_alias
 
 
 class RequestBrandLoggingFilter(Filter):
@@ -10,7 +10,10 @@ class RequestBrandLoggingFilter(Filter):
         super().__init__(name=name)
 
     def filter(self, record: LogRecord) -> bool:
-        if request_brand := get_brand_alias() or get_brand():
-            record.brand = request_brand
+        if request_brand := get_request_brand():
+            record.request_brand = request_brand
+
+        if request_brand_alias := get_request_brand_alias():
+            record.request_brand_alias = request_brand_alias
 
         return True

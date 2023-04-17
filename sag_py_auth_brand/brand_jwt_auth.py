@@ -10,8 +10,8 @@ from starlette.status import HTTP_403_FORBIDDEN
 
 from .constants import LogMessages
 from .models import BrandAuthConfig
-from .request_brand_context import set_brand as set_brand_to_context
-from .request_brand_context import set_brand_alias as set_brand_alias_to_context
+from .request_brand_context import set_request_brand as set_request_brand_to_context
+from .request_brand_context import set_request_brand_alias as set_request_brand_alias_to_context
 
 logger: Logger = logging.getLogger(__name__)
 
@@ -40,20 +40,27 @@ class BrandJwtAuth(JwtAuth):
     async def __call__(self, request: Request, brand: str = Header(...)) -> Token:  # type: ignore
         token: Token = await super(BrandJwtAuth, self).__call__(request)
         self._verify_brand(token, brand)
-        set_brand_to_context(brand)
         return token
 
     def _verify_brand(self, token: Token, brand: str) -> None:
-        if not token.has_role("role-brand", brand) and not self._brand_has_accessible_alias(token, brand):
+        token_has_brand: bool = token.has_role("role-brand", brand)
+        accessible_brand_alias: Optional[str] = self._get_accessible_brand_alias(token, brand)
+
+        if not token_has_brand and not accessible_brand_alias:
+            set_request_brand_to_context(None)
+            set_request_brand_alias_to_context(None)
             self._raise_auth_error(HTTP_403_FORBIDDEN, "Missing brand.")
 
-    def _brand_has_accessible_alias(self, token: Token, brand: str) -> bool:
+        set_request_brand_to_context(brand)
+        set_request_brand_alias_to_context(accessible_brand_alias)
+
+    def _get_accessible_brand_alias(self, token: Token, brand: str) -> Optional[str]:
         brand_aliases: List[str] = token.get_roles("role-brand-alias")
 
         # Check if the given brand is defined as alias for the brand it should be replaced by.
         if not brand_aliases:
-            logger.debug(LogMessages.MISSING_BRAND_ALIAS, brand)
-            return False
+            logger.debug(LogMessages.MISSING_BRAND_ALIAS)
+            return None
 
         # Find indices of all detected brand aliases accessible for the current client or user
         # (i.e. compare accessible brands with brand aliases in token because
@@ -68,11 +75,9 @@ class BrandJwtAuth(JwtAuth):
         # (one user must have access to 0 or 1 brand that corresponds to a brand alias):
         if len(accessible_brand_alias_ids) > 1:
             logger.warning(LogMessages.UNAMBIGUOUS_BRAND_ALIAS)
-            return False
+            return None
         if not accessible_brand_alias_ids:
             logger.warning(LogMessages.MISSING_COMPOUND_BRAND)
-            return False
+            return None
 
-        brand_alias: str = brand_aliases[0]
-        set_brand_alias_to_context(brand_alias)
-        return True
+        return brand_aliases[0]

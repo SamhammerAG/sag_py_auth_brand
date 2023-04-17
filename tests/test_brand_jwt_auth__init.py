@@ -4,6 +4,7 @@ from sag_py_auth.models import TokenRole
 
 from sag_py_auth_brand.brand_jwt_auth import BrandJwtAuth
 from sag_py_auth_brand.models import BrandAuthConfig
+from tests.helpers import build_sample_auth_config
 
 
 def _verify_token_role(jwt: BrandJwtAuth, item_no: int, client: str, role: str) -> None:
@@ -14,9 +15,7 @@ def _verify_token_role(jwt: BrandJwtAuth, item_no: int, client: str, role: str) 
 
 def test__jwt_auth__init__with_endpoint_role() -> None:
     # Arrange
-    auth_config = BrandAuthConfig(
-        "https://authserver.com/auth/realms/projectName", "audienceOne", "myInstance", "myStage"
-    )
+    auth_config: BrandAuthConfig = build_sample_auth_config()
     required_endpoint_role: List[str] = ["myEndpoint"]
 
     # Act
@@ -33,9 +32,7 @@ def test__jwt_auth__init__with_endpoint_role() -> None:
 
 def test__jwt_auth__init__without_endpoint_role() -> None:
     # Arrange
-    auth_config = BrandAuthConfig(
-        "https://authserver.com/auth/realms/projectName", "audienceOne", "myInstance", "myStage"
-    )
+    auth_config: BrandAuthConfig = build_sample_auth_config()
 
     # Act
     jwt = BrandJwtAuth(auth_config, None)

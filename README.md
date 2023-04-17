@@ -83,7 +83,7 @@ console_handler.addFilter(RequestBrandLoggingFilter())
 
 ```
 
-The filter provides the field brand with the brand of the request.
+The filter provides the field request_brand and request_brand_alias with the brand.
 
 ### How a token has to look like
 

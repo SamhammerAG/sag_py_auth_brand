@@ -11,4 +11,7 @@ class BrandAuthConfig(AuthConfig):
 
 
 class BrandLogRecord(LogRecord):
-    brand: str
+    # The original brand of the request
+    request_brand: str
+    # The brand used in backend logic in case of aliasing
+    request_brand_alias: str
