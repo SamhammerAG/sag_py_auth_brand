@@ -1,18 +1,6 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from sag_py_auth.models import Token
-
-from sag_py_auth_brand.brand_jwt_auth import BrandJwtAuth
-from sag_py_auth_brand.models import BrandAuthConfig
-
-
-def build_sample_auth_config() -> BrandAuthConfig:
-    return BrandAuthConfig("https://authserver.com/auth/realms/projectName", "myAudience", "myInstance", "myStage")
-
-
-def build_sample_jwt_auth(roles: Optional[List[str]]) -> BrandJwtAuth:
-    auth_config: BrandAuthConfig = build_sample_auth_config()
-    return BrandJwtAuth(auth_config, roles)
 
 
 def get_token(realm_access: Optional[Dict[str, Any]], resource_access: Optional[Dict[str, Any]]) -> Token:

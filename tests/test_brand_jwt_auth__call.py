@@ -2,32 +2,38 @@ from typing import Literal, Tuple
 
 import pytest
 from fastapi import Request
+from pytest import MonkeyPatch
 from sag_py_auth.models import Token
 from starlette.datastructures import Headers
 
 from sag_py_auth_brand.brand_jwt_auth import BrandJwtAuth
-from tests.helpers import build_sample_jwt_auth, get_token
+from sag_py_auth_brand.models import BrandAuthConfig
+from tests.helpers import get_token
 
 pytest_plugins: Tuple[Literal["pytest_asyncio"]] = ("pytest_asyncio",)
 
 
-async def mock_jwt_auth_call(_: BrandJwtAuth, __: Request) -> Token:
+async def jwt_auth_call_mock(self: BrandJwtAuth, request: Request) -> Token:
     return get_token(None, None)
 
 
-def mock_verify_brand(_: BrandJwtAuth, token: Token, request_brand: str) -> None:
+def _verify_brand_mock(self: BrandJwtAuth, token: Token, brand: str) -> None:
     if token:
         token.token_dict["_verify_brand"] = "True"
-        token.token_dict["_brand"] = request_brand
+        token.token_dict["_brand"] = brand
 
 
 @pytest.mark.asyncio
-async def test__call__correctly_processes_request(monkeypatch: pytest.MonkeyPatch) -> None:
+async def test__call__correctly_processes_request(monkeypatch: MonkeyPatch) -> None:
     # Arrange
-    jwt: BrandJwtAuth = build_sample_jwt_auth(None)
+    auth_config = BrandAuthConfig(
+        "https://authserver.com/auth/realms/projectName", "audienceOne", "myInstance", "myStage"
+    )
 
-    monkeypatch.setattr("sag_py_auth.JwtAuth.__call__", mock_jwt_auth_call)
-    monkeypatch.setattr("sag_py_auth_brand.brand_jwt_auth.BrandJwtAuth._verify_brand", mock_verify_brand)
+    monkeypatch.setattr("sag_py_auth.JwtAuth.__call__", jwt_auth_call_mock)
+    monkeypatch.setattr("sag_py_auth_brand.brand_jwt_auth.BrandJwtAuth._verify_brand", _verify_brand_mock)
+
+    jwt = BrandJwtAuth(auth_config, None)
 
     request: Request = Request(scope={"type": "http"})
     request._headers = Headers({"Authorization": "Bearer validToken"})
@@ -36,8 +42,6 @@ async def test__call__correctly_processes_request(monkeypatch: pytest.MonkeyPatc
     actual: Token = await jwt.__call__(request, "mybrand")
 
     # Assert - Verify that all steps have been executed
-    # Comment: the calls of the mocked function are verified via variables,
-    # alternatively one could use unittest.mock and assertions like assert_called on the functions.
     assert actual.get_field_value("typ") == "Bearer"
     assert actual.get_field_value("azp") == "public-project-swagger"
     assert actual.get_field_value("_verify_brand") == "True"

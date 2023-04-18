@@ -19,7 +19,6 @@ This library bases on sag_py_auth and adds support for instances/brands.
 * Verifies the instance over a token role
 * Verifies the stage over a realm role
 * Allows to set additional permissions by specifying further token roles
-* Supplies brand information from context
 
 ## How to use
 
@@ -38,7 +37,7 @@ from fastapi import Depends
 
 auth_config = BrandAuthConfig("https://authserver.com/auth/realms/projectName", "myaudience", "myinstance", "mystage")
 required_roles = [TokenRole("clientname", "adminrole")]
-requires_admin = Depends(BrandJwtAuth(auth_config, required_endpoint_roles))
+requires_admin = Depends(BrandJwtAuth(auth_config, required_roles))
 ```
 
 Afterwards you can use it in your route like that:
@@ -84,7 +83,7 @@ console_handler.addFilter(RequestBrandLoggingFilter())
 
 ```
 
-The filter provides the field request_brand and request_brand_alias with the brand.
+The filter provides the field request_brand with the brand.
 
 ### How a token has to look like
 
@@ -119,7 +118,7 @@ The filter provides the field request_brand and request_brand_alias with the bra
 
 * role-endpoint is just required for permission checks of the api endpoint
 * role-brand-alias is optional for the alias feature. If you don't use aliases it can be left ayway.
-* role-brand-alias must contain exactly one original brand (also called the compound brand alias) together with one or multiple aliases
+* role-brand-alias must contain exactly one original brand together with one or multiple aliases
 
 ## How to publish
 
