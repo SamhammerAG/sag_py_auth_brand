@@ -17,20 +17,20 @@ logger: Logger = logging.getLogger(__name__)
 
 
 class BrandJwtAuth(JwtAuth):
-    def __init__(self, auth_config: BrandAuthConfig, required_endpoint_role: Optional[List[str]]) -> None:
+    def __init__(self, auth_config: BrandAuthConfig, required_endpoint_roles: Optional[List[str]]) -> None:
         super().__init__(
             auth_config,
-            required_roles=self._build_required_token_roles(auth_config, required_endpoint_role),
+            required_roles=self._build_required_token_roles(auth_config, required_endpoint_roles),
             required_realm_roles=self._build_required_realm_roles(auth_config),
         )
 
     def _build_required_token_roles(
-        self, auth_config: BrandAuthConfig, required_roles: Optional[List[str]]
+        self, auth_config: BrandAuthConfig, required_endpoint_roles: Optional[List[str]]
     ) -> List[TokenRole]:
         token_roles: List[TokenRole] = [TokenRole("role-instance", auth_config.instance)]
 
-        if required_roles is not None:
-            token_roles.extend(TokenRole("role-endpoint", item) for item in required_roles)
+        if required_endpoint_roles is not None:
+            token_roles.extend(TokenRole("role-endpoint", item) for item in required_endpoint_roles)
 
         return token_roles
 

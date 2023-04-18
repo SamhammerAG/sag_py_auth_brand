@@ -16,10 +16,10 @@ def _verify_token_role(jwt: BrandJwtAuth, item_no: int, client: str, role: str) 
 def test__jwt_auth__init__with_endpoint_role() -> None:
     # Arrange
     auth_config: BrandAuthConfig = build_sample_auth_config()
-    required_endpoint_role: List[str] = ["myEndpoint"]
+    required_endpoint_roles: List[str] = ["myEndpoint"]
 
     # Act
-    jwt = BrandJwtAuth(auth_config, required_endpoint_role)
+    jwt = BrandJwtAuth(auth_config, required_endpoint_roles)
 
     # Assert
     assert len(jwt.required_realm_roles) == 1
