@@ -6,9 +6,12 @@ with open("README.md", "r") as fh:
 with open("requirements.txt", "r") as fin:
     REQS = fin.read().splitlines()
 
+with open("requirements-dev.txt", "r") as fin:
+    REQS_DEV = [item for item in fin.read().splitlines() if not item.endswith(".txt")]
+
 setuptools.setup(
     name="sag-py-auth-brand",
-    version="0.2.0",
+    version="0.2.1",
     description="Keycloak brand/instance authentication for python projects",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
@@ -26,7 +29,7 @@ setuptools.setup(
     ],
     keywords="auth, fastapi, keycloak",
     packages=setuptools.find_packages(exclude=["tests"]),
-    package_data={"sag_py_auth_brand": ["py.typed"]},
+    package_data={"sag_py_auth_brand": REQS_DEV},
     python_requires=">=3.8",
     install_requires=REQS,
     extras_require={"dev": ["pytest"]},
