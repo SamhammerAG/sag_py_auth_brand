@@ -42,7 +42,39 @@ class TestVerifyBrandAlias(TestCase):
         # Has to be the alias of the brand from the request.
         # The alias is the brand that has originally had access to the api
         # It is used in the entire background logic as brand
+        # Note: Here we always get the brand that is present in both lists, role-brand and role-brand-aliases
         mock_set_brand_alias_to_context.assert_called_once_with("mybrandone")
+
+    @mock.patch("sag_py_auth_brand.brand_jwt_auth.set_request_brand_alias_to_context")
+    @mock.patch("sag_py_auth_brand.brand_jwt_auth.set_request_brand_to_context")
+    def test__verify_brand__where_user_has_brand_alias_at_any_position(
+        self, mock_set_brand_to_context: Mock, mock_set_brand_alias_to_context: Mock
+    ) -> None:
+        # Arrange
+        brand_jwt_auth: BrandJwtAuth = build_sample_jwt_auth(["myEndpoint"])
+
+        resource_access: Optional[Dict[str, Any]] = {
+            "role-brand": {"roles": ["a-random-brand", "another-random-brand", "a-matching-alias"]},
+            "role-brand-alias": {
+                "roles": ["a-random-alias", "a-matching-alias", "another-random-alias", "the-request-alias"]
+            },
+        }
+
+        token: Token = get_token(None, resource_access)
+
+        # Act
+        brand_jwt_auth._verify_brand(token, "the-request-alias")
+
+        # Assert
+
+        # Has to be the brand of the request
+        mock_set_brand_to_context.assert_called_once_with("the-request-alias")
+
+        # Has to be the alias of the brand from the request.
+        # The alias is the brand that has originally had access to the api
+        # It is used in the entire background logic as brand
+        # Note: Here we always get the brand that is present in both lists, role-brand and role-brand-aliases
+        mock_set_brand_alias_to_context.assert_called_once_with("a-matching-alias")
 
     @mock.patch("sag_py_auth_brand.brand_jwt_auth.set_request_brand_alias_to_context")
     @mock.patch("sag_py_auth_brand.brand_jwt_auth.set_request_brand_to_context")

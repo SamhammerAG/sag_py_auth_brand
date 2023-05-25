@@ -80,4 +80,4 @@ class BrandJwtAuth(JwtAuth):
             logger.warning(LogMessages.MISSING_COMPOUND_BRAND)
             return None
 
-        return brand_aliases[0]
+        return brand_aliases[accessible_brand_alias_ids[0]]
