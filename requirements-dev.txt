@@ -2,6 +2,7 @@
 flake8
 mypy
 build
+black
 
 pytest
 pytest-asyncio
