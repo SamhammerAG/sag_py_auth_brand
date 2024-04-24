@@ -15,7 +15,7 @@ This library bases on sag_py_auth and adds support for instances/brands.
 ## What it does
 * Secure your api endpoints
 * Verifies auth tokens: signature, expiration, issuer, audience
-* Verifies the brand/customer over a token role (+ alias support)
+* Verifies the brand/customer over a token role
 * Verifies the instance over a token role
 * Verifies the stage over a realm role
 * Allows to set additional permissions by specifying further token roles
@@ -61,7 +61,7 @@ See sag_py_auth to find out how to access the token and user info.
 
 Furthermore you can get the brand by accessing it over the context:
 ```python
-from sag_py_auth_brand.request_brand_context import get_brand as get_brand_from_context
+from sag_py_auth_brand.request_brand_context import get_request_brand as get_brand_from_context
 brand = get_brand_from_context()
 ```
 
@@ -84,7 +84,7 @@ console_handler.addFilter(RequestBrandLoggingFilter())
 
 ```
 
-The filter provides the field request_brand and request_brand_alias with the brand.
+The filter provides the field request_brand with the brand.
 
 ### How a token has to look like
 
@@ -109,17 +109,12 @@ The filter provides the field request_brand and request_brand_alias with the bra
         },
         "role-endpoint": {
             "roles": ["permissionOne", "permissionTwo"]
-        },
-        "role-brand-alias": {
-            "roles": ["myBrand", "myBrandAliasOne", "myBrandAliasTwo"]
         }
     }
 }
 ```
 
 * role-endpoint is just required for permission checks of the api endpoint
-* role-brand-alias is optional for the alias feature. If you don't use aliases it can be left ayway.
-* role-brand-alias must contain exactly one original brand (also called the compound brand alias) together with one or multiple aliases
 
 ## How to start developing
 
