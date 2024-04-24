@@ -51,5 +51,6 @@ class TestVerifyBrand(TestCase):
         assert exception.value.detail == "Missing brand."
         mock_set_brand_to_context.assert_called_once_with(None)
 
+
 if __name__ == "__main__":
     main()
