@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.8.2"
+python = "^3.12"
 contextvars = "^2.4"
 fastapi = { version = ">=0.104.1", extras = ["all"] }
 sag-py-auth = ">=0.1.7"
@@ -23,7 +23,7 @@ mock = "*"
 types-mock = "*"
 coverage-lcov = "*"
 toml = "*"
-coverage = "6.5.0"
+coverage = "*"
 
 [build-system]
 requires = ["setuptools>=61.0"]
