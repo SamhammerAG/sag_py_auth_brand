@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from sag_py_auth.models import Token
 
@@ -10,13 +10,13 @@ def build_sample_auth_config() -> BrandAuthConfig:
     return BrandAuthConfig("https://authserver.com/auth/realms/projectName", "myAudience", "myInstance", "myStage")
 
 
-def build_sample_jwt_auth(roles: Optional[List[str]]) -> BrandJwtAuth:
+def build_sample_jwt_auth(roles: list[str] | None) -> BrandJwtAuth:
     auth_config: BrandAuthConfig = build_sample_auth_config()
     return BrandJwtAuth(auth_config, roles)
 
 
-def get_token(realm_access: Optional[Dict[str, Any]], resource_access: Optional[Dict[str, Any]]) -> Token:
-    token_dict: Dict[str, Any] = {
+def get_token(realm_access: dict[str, Any] | None, resource_access: dict[str, Any] | None) -> Token:
+    token_dict: dict[str, Any] = {
         "exp": 1679924012,
         "iat": 1679923712,
         "auth_time": 1679923711,

@@ -1,6 +1,5 @@
 import logging
 from logging import Logger
-from typing import List, Optional
 
 from fastapi import Header
 from sag_py_auth.jwt_auth import JwtAuth
@@ -15,7 +14,7 @@ logger: Logger = logging.getLogger(__name__)
 
 
 class BrandJwtAuth(JwtAuth):
-    def __init__(self, auth_config: BrandAuthConfig, required_endpoint_roles: Optional[List[str]]) -> None:
+    def __init__(self, auth_config: BrandAuthConfig, required_endpoint_roles: list[str] | None) -> None:
         super().__init__(
             auth_config,
             required_roles=self._build_required_token_roles(auth_config, required_endpoint_roles),
@@ -23,16 +22,16 @@ class BrandJwtAuth(JwtAuth):
         )
 
     def _build_required_token_roles(
-        self, auth_config: BrandAuthConfig, required_endpoint_roles: Optional[List[str]]
-    ) -> List[TokenRole]:
-        token_roles: List[TokenRole] = [TokenRole("role-instance", auth_config.instance)]
+        self, auth_config: BrandAuthConfig, required_endpoint_roles: list[str] | None
+    ) -> list[TokenRole]:
+        token_roles: list[TokenRole] = [TokenRole("role-instance", auth_config.instance)]
 
         if required_endpoint_roles is not None:
             token_roles.extend(TokenRole("role-endpoint", item) for item in required_endpoint_roles)
 
         return token_roles
 
-    def _build_required_realm_roles(self, auth_config: BrandAuthConfig) -> List[str]:
+    def _build_required_realm_roles(self, auth_config: BrandAuthConfig) -> list[str]:
         return [auth_config.stage]
 
     async def __call__(self, request: Request, brand: str = Header(...)) -> Token:  # type: ignore
