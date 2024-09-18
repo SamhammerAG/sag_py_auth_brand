@@ -1,4 +1,4 @@
-from typing import Literal, Tuple
+from typing import Literal
 
 import pytest
 from fastapi import Request
@@ -8,7 +8,7 @@ from starlette.datastructures import Headers
 from sag_py_auth_brand.brand_jwt_auth import BrandJwtAuth
 from tests.helpers import build_sample_jwt_auth, get_token
 
-pytest_plugins: Tuple[Literal["pytest_asyncio"]] = ("pytest_asyncio",)
+pytest_plugins: tuple[Literal["pytest_asyncio"]] = ("pytest_asyncio",)
 
 
 async def mock_jwt_auth_call(_: BrandJwtAuth, __: Request) -> Token:
@@ -33,7 +33,7 @@ async def test__call__correctly_processes_request(monkeypatch: pytest.MonkeyPatc
     request._headers = Headers({"Authorization": "Bearer validToken"})
 
     # Act
-    actual: Token = await jwt.__call__(request, "mybrand")
+    actual: Token = await jwt(request, "mybrand")
 
     # Assert - Verify that all steps have been executed
     # Comment: the calls of the mocked function are verified via variables,

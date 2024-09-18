@@ -1,5 +1,3 @@
-from typing import List
-
 from sag_py_auth.models import TokenRole
 
 from sag_py_auth_brand.brand_jwt_auth import BrandJwtAuth
@@ -16,7 +14,7 @@ def _verify_token_role(jwt: BrandJwtAuth, item_no: int, client: str, role: str) 
 def test__jwt_auth__init__with_endpoint_role() -> None:
     # Arrange
     auth_config: BrandAuthConfig = build_sample_auth_config()
-    required_endpoint_roles: List[str] = ["myEndpoint"]
+    required_endpoint_roles: list[str] = ["myEndpoint"]
 
     # Act
     jwt = BrandJwtAuth(auth_config, required_endpoint_roles)
