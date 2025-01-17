@@ -13,17 +13,18 @@ fastapi = { version = ">=0.104.1", extras = ["all"] }
 sag-py-auth = ">=0.1.7"
 
 [tool.poetry.group.dev.dependencies]
-flake8 = "*"
+build = ">=1.1.1"
+coverage = "*"
+coverage-lcov = "*"
+flake8 = ">=5.0.4"
+mock = "*"
 mypy = "*"
-build = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
-mock = "*"
 types-mock = "*"
-coverage-lcov = "*"
 toml = "*"
-coverage = "*"
+zipp = ">=3.19.1"
 
 [build-system]
 requires = ["setuptools>=61.0"]
