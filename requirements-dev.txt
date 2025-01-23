@@ -1,16 +1,15 @@
 -r requirements.txt
-flake8
+build>=1.1.1
+coverage-lcov
+coverage==6.5.0
+flake8>=5.0.4
+mock
 mypy
-build
-
 pytest
 pytest-asyncio
 pytest-cov
-mock
-types-mock
-
 # Toml and coverage temporarely fixes compatibility issues between coverage-lcov and coverage
 # see for details: https://github.com/theupdateframework/python-tuf/issues/2254
-coverage-lcov
 toml
-coverage==6.5.0
+types-mock
+zipp>=3.19.1
