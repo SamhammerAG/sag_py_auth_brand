@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sag-py-auth-brand"
-version = "1.0.1"
+version = "1.2.0"
 description = "Keycloak brand/instance authentication for python projects"
 authors = ["Samhammer AG"]
 license = "MIT"
@@ -9,14 +9,14 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 contextvars = "^2.4"
-fastapi = { version = ">=0.104.1", extras = ["all"] }
+fastapi = { version = ">=0.115.12", extras = ["standard"] }
 sag-py-auth = ">=1.1.1"
 
 [tool.poetry.group.dev.dependencies]
-build = ">=1.1.1"
+build = ">=1.2.2.post1"
 coverage = "*"
 coverage-lcov = "*"
-flake8 = ">=5.0.4"
+flake8 = ">=7.2.0"
 mock = "*"
 mypy = "*"
 pytest = "*"
@@ -24,7 +24,7 @@ pytest-asyncio = "*"
 pytest-cov = "*"
 types-mock = "*"
 toml = "*"
-zipp = ">=3.19.1"
+zipp = ">=3.21.0"
 
 [build-system]
 requires = ["setuptools>=61.0"]
