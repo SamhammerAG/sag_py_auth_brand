@@ -18,7 +18,7 @@ def test__get_field_value__with_brand() -> None:
 
     # Assert
     assert log_entry.msg == "A test message"
-    assert cast(BrandLogRecord, log_entry).request_brand == "myBrand"
+    assert cast(BrandLogRecord, log_entry).brand == "myBrand"
 
 
 def test__get_field_value__without_data() -> None:
