@@ -12,4 +12,4 @@ class BrandAuthConfig(AuthConfig):
 
 class BrandLogRecord(LogRecord):
     # The original brand of the request
-    request_brand: str
+    brand: str
