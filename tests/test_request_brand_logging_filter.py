@@ -2,7 +2,9 @@ from logging import LogRecord
 from typing import cast
 
 from sag_py_auth_brand.models import BrandLogRecord
-from sag_py_auth_brand.request_brand_context import set_request_brand as set_request_brand_to_context
+from sag_py_auth_brand.request_brand_context import (
+    set_request_brand as set_request_brand_to_context,
+)
 from sag_py_auth_brand.request_brand_logging_filter import RequestBrandLoggingFilter
 
 
