@@ -13,6 +13,8 @@
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
 .idea/dictionaries
+.idea/.name
+.idea/ruff.xml
 
 ## File-based project format
 *.ipr
