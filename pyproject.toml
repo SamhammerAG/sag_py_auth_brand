@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sag-py-auth-brand"
-version = "1.2.3"
+version = "1.2.4"
 description = "Keycloak brand/instance authentication for python projects"
 authors = ["Samhammer AG"]
 license = "MIT"
