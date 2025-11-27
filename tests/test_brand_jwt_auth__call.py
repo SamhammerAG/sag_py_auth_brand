@@ -22,12 +22,16 @@ def mock_verify_brand(_: BrandJwtAuth, token: Token, request_brand: str) -> None
 
 
 @pytest.mark.asyncio
-async def test__call__correctly_processes_request(monkeypatch: pytest.MonkeyPatch) -> None:
+async def test__call__correctly_processes_request(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     # Arrange
     jwt: BrandJwtAuth = build_sample_jwt_auth(None)
 
     monkeypatch.setattr("sag_py_auth.JwtAuth.__call__", mock_jwt_auth_call)
-    monkeypatch.setattr("sag_py_auth_brand.brand_jwt_auth.BrandJwtAuth._verify_brand", mock_verify_brand)
+    monkeypatch.setattr(
+        "sag_py_auth_brand.brand_jwt_auth.BrandJwtAuth._verify_brand", mock_verify_brand
+    )
 
     request: Request = Request(scope={"type": "http"})
     request._headers = Headers({"Authorization": "Bearer validToken"})

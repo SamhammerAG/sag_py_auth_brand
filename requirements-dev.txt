@@ -2,7 +2,6 @@
 build>=1.2.2.post1
 coverage-lcov
 coverage==7.8.1
-flake8>=7.2.0
 mock
 mypy
 pytest
@@ -10,6 +9,7 @@ pytest-asyncio
 pytest-cov
 # Toml and coverage temporarely fixes compatibility issues between coverage-lcov and coverage
 # see for details: https://github.com/theupdateframework/python-tuf/issues/2254
+ruff
 toml
 types-mock
 zipp>=3.21.0

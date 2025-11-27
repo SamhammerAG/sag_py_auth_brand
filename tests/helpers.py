@@ -7,7 +7,12 @@ from sag_py_auth_brand.models import BrandAuthConfig
 
 
 def build_sample_auth_config() -> BrandAuthConfig:
-    return BrandAuthConfig("https://authserver.com/auth/realms/projectName", "myAudience", "myInstance", "myStage")
+    return BrandAuthConfig(
+        "https://authserver.com/auth/realms/projectName",
+        "myAudience",
+        "myInstance",
+        "myStage",
+    )
 
 
 def build_sample_jwt_auth(roles: list[str] | None) -> BrandJwtAuth:
@@ -15,7 +20,9 @@ def build_sample_jwt_auth(roles: list[str] | None) -> BrandJwtAuth:
     return BrandJwtAuth(auth_config, roles)
 
 
-def get_token(realm_access: dict[str, Any] | None, resource_access: dict[str, Any] | None) -> Token:
+def get_token(
+    realm_access: dict[str, Any] | None, resource_access: dict[str, Any] | None
+) -> Token:
     token_dict: dict[str, Any] = {
         "exp": 1679924012,
         "iat": 1679923712,

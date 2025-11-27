@@ -1,5 +1,9 @@
-from sag_py_auth_brand.request_brand_context import get_request_brand as get_request_brand_from_context
-from sag_py_auth_brand.request_brand_context import set_request_brand as set_request_brand_to_context
+from sag_py_auth_brand.request_brand_context import (
+    get_request_brand as get_request_brand_from_context,
+)
+from sag_py_auth_brand.request_brand_context import (
+    set_request_brand as set_request_brand_to_context,
+)
 
 
 def test__get_brand__not_set() -> None:
